@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fondo-gradiente {
+  background: linear-gradient(to bottom, #d80f0f 0%, #FE3104 75%, #250700 100%);
+}
+
+.fondo-gradiente-alrevez {
+  background: linear-gradient(to bottom, #250700 0%, #FE3104 75%, #d80f0f 100%);
+}

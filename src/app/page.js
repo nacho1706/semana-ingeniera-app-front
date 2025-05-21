@@ -6,7 +6,7 @@ export default function Home() {
       {/* SECCIÓN 1: Gradiente hasta el título */}
       <div className="fondo-gradiente px-8 py-10 text-center sm:text-left pb-10">
         <Image
-          className="dark:invert mx-auto sm:mx-0"
+          className="mx-auto sm:mx-0"
           src="/assets/logo_unsta.svg"
           alt="Logo"
           width={250}

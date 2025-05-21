@@ -37,7 +37,6 @@ export default function Home() {
         <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-[-1]" />
         {/* TRANSICIÓN SUPERPUESTA */}
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-[#250700] to-transparent z-[-1]" />
-        <div className="absolute bottom-110 left-0 w-full h-32 bg-gradient-to-t from-[#250700] to-transparent z-[-1]" />
         {/* CONTENIDO ENCIMA DEL VIDEO */}
         <div className="relative z-10 px-8 py-3 mt-10">
           <div className="flex gap-2 items-center flex-col sm:flex-row mt-4">
@@ -66,7 +65,7 @@ export default function Home() {
           </div>
         </div>
         
-        <main className="fondo-gradiente-alrevez px-8 py-30 mt-30"></main>
+        <main className="fondo-gradiente-alrevez px-8 py-30 mt-25"></main>
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
       </div>
     </div>

@@ -26,9 +26,9 @@ body {
 }
 
 .fondo-gradiente {
-  background: linear-gradient(to bottom, #d80f0f 0%, #FE3104 75%, #250700 100%);
+  background: linear-gradient(to bottom, #FE3104 0%, #FF5501 90%, #250700 100%);
 }
 
 .fondo-gradiente-alrevez {
-  background: linear-gradient(to bottom, #250700 0%, #FE3104 75%, #d80f0f 100%);
+  background: linear-gradient(to bottom, #250700 0%, #FF5501 80%, #FE3104 100%);
 }

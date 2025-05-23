@@ -4,7 +4,7 @@ import GroupBox from "@/app/fixture/components/group-box";
 
 export default function TournamentGroups() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FF5501] via-[#ff7f5c] to-[#FF5501]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FF5501] via-[#ff7f5c] to-[#FF5501] text-black">
       <header className="p-4 relative">
         <Link href="/" className="absolute top-4 left-4 text-white">
           <ArrowLeft size={24} />

@@ -64,7 +64,7 @@ export default function Home() {
             </Link>
             <Link
               className="bg-white text-black px-10 py-2 rounded-xl font-medium"
-              href="#"
+              href="/goleadores"
             >
               GOLEADORES
             </Link>

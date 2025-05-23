@@ -64,69 +64,72 @@ export default function GrupoDetalle({ params }) {
       </header>
 
       <main className="flex-1 p-4">
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <h2 className="text-xl font-bold mb-4 text-center">Equipos</h2>
+        <div className="sm:flex sm:flex-row sm:justify-center sm:align-center">
+          <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <h2 className="text-xl font-bold mb-4 text-center">Equipos</h2>
 
-          {/* Tabla de posiciones */}
-          <div className="overflow-x-auto sm:flex sm:justify-center">
-            <table className="w-full sm:w-200 mb-4">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="p-2 text-left pr-16">Equipo</th>
-                  <th className="p-2 text-center">PTS</th>
-                  <th className="p-2 text-center">PJ</th>
-                  <th className="p-2 text-center">PG</th>
-                  <th className="p-2 text-center">PE</th>
-                  <th className="p-2 text-center">PP</th>
-                  <th className="p-2 text-center">GF</th>
-                </tr>
-              </thead>
-              <tbody>
-                {equipos.map((equipo) => (
-                  <tr key={equipo.id} className="border-b">
-                    <td className="p-2">
-                      <div className="flex items-center">
-                        <div className="mr-2">
-                          <Image
-                            className="w-16 h-16 mx-auto sm:h-32"
-                            src="/teams/escudo_test.svg"
-                            width={64}
-                            height={64}
-                            alt={`Equipo 3 del grupo ${equipo.tipo}`}
-                          />
-                        </div>
-                        <span className="text-sm">{equipo.nombre}</span>
-                      </div>
-                    </td>
-                    <td className="p-2 text-center font-bold">
-                      {equipo.puntos}
-                    </td>
-                    <td className="p-2 text-center">{equipo.pj}</td>
-                    <td className="p-2 text-center">{equipo.pg}</td>
-                    <td className="p-2 text-center">{equipo.pe}</td>
-                    <td className="p-2 text-center">{equipo.pp}</td>
-                    <td className="p-2 text-center">{equipo.gf}</td>
+            {/* Tabla de posiciones */}
+            <div className="overflow-x-auto sm:flex sm:justify-center sm:px-10">
+              <table className="w-full sm:w-200 mb-4">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="p-2 text-left pr-16">Equipo</th>
+                    <th className="p-2 text-center">PTS</th>
+                    <th className="p-2 text-center">PJ</th>
+                    <th className="p-2 text-center">PG</th>
+                    <th className="p-2 text-center">PE</th>
+                    <th className="p-2 text-center">PP</th>
+                    <th className="p-2 text-center">GF</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {equipos.map((equipo) => (
+                    <tr key={equipo.id} className="border-b">
+                      <td className="p-2">
+                        <div className="flex items-center">
+                          <div className="mr-2">
+                            <Image
+                              className="w-16 h-16 mx-auto sm:h-32"
+                              src="/teams/escudo_test.svg"
+                              width={64}
+                              height={64}
+                              alt={`Equipo 3 del grupo ${equipo.tipo}`}
+                            />
+                          </div>
+                          <span className="text-sm">{equipo.nombre}</span>
+                        </div>
+                      </td>
+                      <td className="p-2 text-center font-bold">
+                        {equipo.puntos}
+                      </td>
+                      <td className="p-2 text-center">{equipo.pj}</td>
+                      <td className="p-2 text-center">{equipo.pg}</td>
+                      <td className="p-2 text-center">{equipo.pe}</td>
+                      <td className="p-2 text-center">{equipo.pp}</td>
+                      <td className="p-2 text-center">{equipo.gf}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-          <div className="text-xs text-gray-500 mb-4">
-            <p>
-              PTS: Puntos, PJ: Partidos jugados, PG: Partidos ganados, PE:
-              Partidos empatados, PP: Partidos perdidos, GF: Goles a favor,
-            </p>
+            <div className="text-xs text-gray-500 mb-4 sm:flex sm:justify-center">
+              <p>
+                PTS: Puntos, PJ: Partidos jugados, PG: Partidos ganados, PE:
+                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor,
+              </p>
+            </div>
           </div>
         </div>
-
         {/* Sección de partidos */}
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
-          <div className="space-y-3">
-            <PartidoFecha/>
-            <PartidoFecha/>
-          </div>
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
+            <div className="space-y-3">
+              <PartidoFecha />
+              <PartidoFecha />
+              <PartidoFecha />
+              <PartidoFecha />
+            </div>
         </div>
       </main>
     </div>

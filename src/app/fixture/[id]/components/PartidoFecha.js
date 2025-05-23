@@ -12,7 +12,7 @@ const PartidoFecha = () => {
             height={64}
             alt={`Equipo 322 del grupo`}
           />
-          <span className="ml-2 overflow-hidden not-sm:hidden">San Socalo</span>
+          <span className="ml-2 overflow-hidden not-sm:hidden ">San Socalo</span>
         </div>
         <span className="ml-2 overflow-hidden sm:hidden col-start-2">
           San Socalo
@@ -36,8 +36,11 @@ const PartidoFecha = () => {
           />
         </div>
       </div>
-      <div className="text-center text-sm text-gray-500 mt-2">
+      <div className="text-center text-sm mt-2 font-bold">
         Fecha: 26/05/2025 - 17:30
+      </div>
+      <div className="text-center text-sm mt-1 font-bold">
+        Cancha: 1 
       </div>
     </div>
   );

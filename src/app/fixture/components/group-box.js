@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function GroupBox({ groupNumber }) {
 return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden pb-10 sm:pb-20">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden pb-10 sm:pb-16">
         <div className="bg-white p-2 text-center">
             <h2 className="font-bold text-lg">GRUPO {groupNumber}</h2>
         </div>

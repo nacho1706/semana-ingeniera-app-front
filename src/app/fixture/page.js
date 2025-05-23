@@ -4,7 +4,7 @@ import GroupBox from "@/app/fixture/components/group-box";
 
 export default function TournamentGroups() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#ffaa8d] via-[#ff7f5c] to-[#ff5533]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FF5501] via-[#ff7f5c] to-[#FF5501]">
       <header className="p-4 relative">
         <Link href="/" className="absolute top-4 left-4 text-white">
           <ArrowLeft size={24} />
@@ -17,7 +17,6 @@ export default function TournamentGroups() {
             MASCULINO
           </h1>
         </div>
-
         <div className="flex-1 px-4 grid grid-cols-2 gap-4 sm:gap-14 md:grid-cols-3">
           <Link href="/" className="">
             <GroupBox groupNumber={1} />
@@ -38,13 +37,30 @@ export default function TournamentGroups() {
             <GroupBox groupNumber={6} />
           </Link>
         </div>
+      </div>
 
-        <div className="text-center mt-4 mb-8">
-          <h1 className="text-white text-2xl font-bold tracking-wider">
+       <div className="flex-1 flex flex-col">
+        <div className="text-center mb-4">
+          <h1 className="text-white text-2xl font-bold tracking-wider mt-30">
             FEMENINO
           </h1>
         </div>
+        <div className="flex-1 px-4 grid grid-cols-2 gap-4 sm:gap-14 md:grid-cols-4 mb-10">
+          <Link href="/fixture/1" className="">
+            <GroupBox groupNumber={1} />
+          </Link>
+          <Link href="/fixture/2" className="">
+            <GroupBox groupNumber={2} />
+          </Link>
+          <Link href="/fixture/3" className="">
+            <GroupBox groupNumber={3} />
+          </Link>
+          <Link href="/fixture/4" className="">
+            <GroupBox groupNumber={4} />
+          </Link>
+        </div>
       </div>
+
     </div>
   );
 }

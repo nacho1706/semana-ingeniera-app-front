@@ -18,16 +18,16 @@ export default function TournamentGroups() {
           </h1>
         </div>
         <div className="flex-1 px-4 grid grid-cols-2 gap-4 sm:gap-14 md:grid-cols-3">
-          <Link href="/" className="">
+          <Link href="/fixture/1" className="">
             <GroupBox groupNumber={1} />
           </Link>
-          <Link href="/" className="">
+          <Link href="/fixture/2" className="">
             <GroupBox groupNumber={2} />
           </Link>
-          <Link href="/" className="">
+          <Link href="/fixture/3" className="">
             <GroupBox groupNumber={3} />
           </Link>
-          <Link href="/" className="">
+          <Link href="/fixture/4" className="">
             <GroupBox groupNumber={4} />
           </Link>
           <Link href="/" className="">

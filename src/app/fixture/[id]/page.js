@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
+import PartidoFecha from "./components/PartidoFecha";
 
 export default function GrupoDetalle({ params }) {
   const { id } = params;
@@ -54,7 +55,7 @@ export default function GrupoDetalle({ params }) {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FF5501] to-[#FE3104]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FF5501] to-[#FE3104] text-black">
       <header className="p-4 flex items-center">
         <Link href="/fixture" className="text-white mr-4">
           <ArrowLeft size={24} />
@@ -119,66 +120,12 @@ export default function GrupoDetalle({ params }) {
           </div>
         </div>
 
+        {/* Sección de partidos */}
         <div className="bg-white rounded-lg shadow-md p-4">
           <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
           <div className="space-y-3">
-            <div className="p-3 border rounded-lg">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <Image
-                    className="w-16 h-16 mx-auto sm:h-32"
-                    src="/teams/escudo_test.svg"
-                    width={64}
-                    height={64}
-                    alt={`Equipo 3 del grupo`}
-                  />
-                  <span className="ml-2">Equipo Azul</span>
-                </div>
-                <div className="font-bold">VS</div>
-                <div className="flex items-center">
-                  <span className="mr-2">Equipo Rojo</span>
-                  <Image
-                    className="w-16 h-16 mx-auto sm:h-32"
-                    src="/teams/escudo_test.svg"
-                    width={64}
-                    height={64}
-                    alt={`Equipo 32 del grupo`}
-                  />
-                </div>
-              </div>
-              <div className="text-center text-sm text-gray-500 mt-2">
-                Fecha: 25/05/2025 - 15:00
-              </div>
-            </div>
-
-            <div className="p-3 border rounded-lg">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <Image
-                    className="w-16 h-16 mx-auto sm:h-32"
-                    src="/teams/escudo_test.svg"
-                    width={64}
-                    height={64}
-                    alt={`Equipo 322 del grupo`}
-                  />
-                  <span className="ml-2">Equipo Naranja</span>
-                </div>
-                <div className="font-bold">VS</div>
-                <div className="flex items-center">
-                  <span className="mr-2">Equipo Negro</span>
-                  <Image
-                    className="w-16 h-16 mx-auto sm:h-32"
-                    src="/teams/escudo_test.svg"
-                    width={64}
-                    height={64}
-                    alt={`Equipo 32 del gru2po`}
-                  />
-                </div>
-              </div>
-              <div className="text-center text-sm text-gray-500 mt-2">
-                Fecha: 26/05/2025 - 17:30
-              </div>
-            </div>
+            <PartidoFecha/>
+            <PartidoFecha/>
           </div>
         </div>
       </main>

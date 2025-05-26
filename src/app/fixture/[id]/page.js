@@ -18,6 +18,7 @@ export default function GrupoDetalle({ params }) {
       pe: 0,
       pp: 1,
       gf: 2,
+      dg: 2,
     },
     {
       id: 2,
@@ -29,6 +30,7 @@ export default function GrupoDetalle({ params }) {
       pe: 1,
       pp: 1,
       gf: 2,
+      dg: 2,
     },
     {
       id: 3,
@@ -40,6 +42,7 @@ export default function GrupoDetalle({ params }) {
       pe: 1,
       pp: 2,
       gf: 2,
+      dg: 2,
     },
     {
       id: 4,
@@ -51,6 +54,7 @@ export default function GrupoDetalle({ params }) {
       pe: 1,
       pp: 3,
       gf: 2,
+      dg: 2,
     },
   ];
 
@@ -80,6 +84,7 @@ export default function GrupoDetalle({ params }) {
                     <th className="p-2 text-center">PE</th>
                     <th className="p-2 text-center">PP</th>
                     <th className="p-2 text-center">GF</th>
+                    <th className="p-2 text-center">DG</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -107,6 +112,7 @@ export default function GrupoDetalle({ params }) {
                       <td className="p-2 text-center">{equipo.pe}</td>
                       <td className="p-2 text-center">{equipo.pp}</td>
                       <td className="p-2 text-center">{equipo.gf}</td>
+                      <td className="p-2 text-center">{equipo.dg}</td>
                     </tr>
                   ))}
                 </tbody>

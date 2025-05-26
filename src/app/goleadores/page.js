@@ -144,8 +144,8 @@ const GoleadoresPage = () => {
 
                         <div className="bg-blue-50 p-4 rounded-lg text-center">
                             <div className="text-blue-500 mx-auto mb-2 text-2xl">⚽</div>
-                            <h3 className="font-bold text-lg">Total de Goles Torneo</h3>
-                            <p className="text-2xl font-bold text-blue-600">100</p>
+                            <h3 className="font-bold text-lg">Equipo menos goleado</h3>
+                            <p className="text-2xl font-bold text-blue-600">SAN SOCALO</p>
                         </div>
 
                         <div className="bg-green-50 p-4 rounded-lg text-center">

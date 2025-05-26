@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import GroupBox from "@/app/fixture/components/group-box";
+import GroupBox from "./components/group-box";
 
 export default function TournamentGroups() {
   return (

@@ -9,6 +9,7 @@ export const indexEquipos = async (params: {
   pagina?: number;
   cantidad?: number;
   grupo?: number;
+  puntero?: boolean;
 }) => {
   const { data } = await api.get("/equipos/index", { params });
   return data;

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const PartidoFecha = () => {
+const PartidoFecha = ({equipos}) => {
   return (
     <div className="p-3 border rounded-lg text-black">
       <div className="grid grid-cols-5 justify-between items-center">

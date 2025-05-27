@@ -1,62 +1,31 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import PartidoFecha from "./components/PartidoFecha";
+import { useEffect, useState } from "react";
+import { indexEquipos } from "../../lib/api/equipos";
 
 export default function GrupoDetalle({ params }) {
   const { id } = params;
+  const [equipos, setEquipos] = useState([]);
 
-  // Datos de ejemplo para los equipos con puntos y estadísticas
-  const equipos = [
-    {
-      id: 1,
-      nombre: "Equipo Azul",
-      tipo: "striped-blue",
-      puntos: 9,
-      pj: 4,
-      pg: 3,
-      pe: 0,
-      pp: 1,
-      gf: 2,
-      dg: 2,
-    },
-    {
-      id: 2,
-      nombre: "Equipo Rojo",
-      tipo: "red",
-      puntos: 7,
-      pj: 4,
-      pg: 2,
-      pe: 1,
-      pp: 1,
-      gf: 2,
-      dg: 2,
-    },
-    {
-      id: 3,
-      nombre: "Equipo Naranja",
-      tipo: "striped-orange",
-      puntos: 4,
-      pj: 4,
-      pg: 1,
-      pe: 1,
-      pp: 2,
-      gf: 2,
-      dg: 2,
-    },
-    {
-      id: 4,
-      nombre: "Equipo Negro",
-      tipo: "striped-black",
-      puntos: 1,
-      pj: 4,
-      pg: 0,
-      pe: 1,
-      pp: 3,
-      gf: 2,
-      dg: 2,
-    },
-  ];
+  useEffect(() => {
+    const fetchEquipos = async () => {
+      try {
+        const response = await indexEquipos({ cantidad: 4, pagina: 1, grupo: id, puntero: 1});
+        const equipos = response.data;
+        setEquipos(equipos);
+
+        const response2 = await 
+      } catch (error) {
+        console.error("Error al obtener los equipos del grupo:", error);
+      }
+    };
+
+    fetchEquipos();
+  }, [id]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#FF5501] to-[#FE3104] text-black">
@@ -95,10 +64,10 @@ export default function GrupoDetalle({ params }) {
                           <div className="mr-2">
                             <Image
                               className="w-16 h-16 mx-auto sm:h-32"
-                              src="/teams/escudo_test.svg"
+                              src={`/teams/${equipo.nombre}.svg` || "/teams/escudo_test.svg"}
                               width={64}
                               height={64}
-                              alt={`Equipo 3 del grupo ${equipo.tipo}`}
+                              alt={`Equipo 3 del grupo ${equipo}`}
                             />
                           </div>
                           <span className="text-sm">{equipo.nombre}</span>
@@ -107,12 +76,12 @@ export default function GrupoDetalle({ params }) {
                       <td className="p-2 text-center font-bold">
                         {equipo.puntos}
                       </td>
-                      <td className="p-2 text-center">{equipo.pj}</td>
-                      <td className="p-2 text-center">{equipo.pg}</td>
-                      <td className="p-2 text-center">{equipo.pe}</td>
-                      <td className="p-2 text-center">{equipo.pp}</td>
-                      <td className="p-2 text-center">{equipo.gf}</td>
-                      <td className="p-2 text-center">{equipo.dg}</td>
+                      <td className="p-2 text-center">{equipo.PJ}</td>
+                      <td className="p-2 text-center">{equipo.PG}</td>
+                      <td className="p-2 text-center">{equipo.PE}</td>
+                      <td className="p-2 text-center">{equipo.PP}</td>
+                      <td className="p-2 text-center">{equipo.GF}</td>
+                      <td className="p-2 text-center">{equipo.DG}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -128,14 +97,11 @@ export default function GrupoDetalle({ params }) {
           </div>
         </div>
         {/* Sección de partidos */}
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
-            <div className="space-y-3">
-              <PartidoFecha />
-              <PartidoFecha />
-              <PartidoFecha />
-              <PartidoFecha />
-            </div>
+        <div className="bg-white rounded-lg shadow-md p-4">
+          <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
+          <div className="space-y-3">
+            <PartidoFecha equipos={equipos}/>
+          </div>
         </div>
       </main>
     </div>

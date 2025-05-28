@@ -6,25 +6,39 @@ import { ArrowLeft } from "lucide-react";
 import PartidoFecha from "./components/PartidoFecha";
 import { useEffect, useState } from "react";
 import { indexEquipos } from "../../lib/api/equipos";
+import { indexPartidos } from "../../lib/api/partidos";
 
 export default function GrupoDetalle({ params }) {
   const { id } = params;
   const [equipos, setEquipos] = useState([]);
+  const [partidos, setPartidos] = useState([]);
 
   useEffect(() => {
-    const fetchEquipos = async () => {
+    const fetchData = async () => {
       try {
-        const response = await indexEquipos({ cantidad: 4, pagina: 1, grupo: id, puntero: 1});
-        const equipos = response.data;
-        setEquipos(equipos);
+        const responsePartidos = await indexPartidos({
+          cantidad: 20,
+          pagina: 1,
+          grupo: id,
+        });
+        const partidos = responsePartidos.data;
+        console.log("partidos: ", partidos);
 
-        const response2 = await 
+        const responseEquipos = await indexEquipos({
+          cantidad: 4,
+          pagina: 1,
+          grupo: id,
+          puntero: 1,
+        });
+        const equipos = responseEquipos.data;
+        setEquipos(equipos);
+        setPartidos(partidos);
       } catch (error) {
-        console.error("Error al obtener los equipos del grupo:", error);
+        console.error("Error al obtener los datos del grupo:", error);
       }
     };
 
-    fetchEquipos();
+    fetchData();
   }, [id]);
 
   return (
@@ -67,15 +81,13 @@ export default function GrupoDetalle({ params }) {
                               src={`/teams/${equipo.nombre}.svg` || "/teams/escudo_test.svg"}
                               width={64}
                               height={64}
-                              alt={`Equipo 3 del grupo ${equipo}`}
+                              alt={`Escudo de ${equipo.nombre}`}
                             />
                           </div>
                           <span className="text-sm">{equipo.nombre}</span>
                         </div>
                       </td>
-                      <td className="p-2 text-center font-bold">
-                        {equipo.puntos}
-                      </td>
+                      <td className="p-2 text-center font-bold">{equipo.puntos}</td>
                       <td className="p-2 text-center">{equipo.PJ}</td>
                       <td className="p-2 text-center">{equipo.PG}</td>
                       <td className="p-2 text-center">{equipo.PE}</td>
@@ -91,7 +103,7 @@ export default function GrupoDetalle({ params }) {
             <div className="text-xs text-gray-500 mb-4 sm:flex sm:justify-center">
               <p>
                 PTS: Puntos, PJ: Partidos jugados, PG: Partidos ganados, PE:
-                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor,
+                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor, DG: Diferencia de goles
               </p>
             </div>
           </div>
@@ -100,7 +112,9 @@ export default function GrupoDetalle({ params }) {
         <div className="bg-white rounded-lg shadow-md p-4">
           <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
           <div className="space-y-3">
-            <PartidoFecha equipos={equipos}/>
+            {partidos.map((partido, index) => (
+              <PartidoFecha key={partido.id || index} partido={partido} equipos={equipos} />
+            ))}
           </div>
         </div>
       </main>

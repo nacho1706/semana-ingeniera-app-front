@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PlusCircle, Filter } from "lucide-react";
 import { createPartido, indexPartidos } from "../../lib/api/partidos";
 import { indexEquipos } from "../../lib/api/equipos";
 
 export default function AdminPartidos({ onEditarResultado, visible = true }) {
-  if (!visible) return null;
-
+  // — Hooks siempre al tope —
   const [equipos, setEquipos] = useState([]);
   const [partidos, setPartidos] = useState([]);
   const [filtroGrupo, setFiltroGrupo] = useState("");
@@ -21,21 +20,23 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
     cancha: "",
   });
 
-  // Paginación
+  // — Paginación —
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const itemsPerPage = 10;
 
-  const fetchEquipos = async () => {
+  // — Fetch de equipos —
+  const fetchEquipos = useCallback(async () => {
     try {
       const resp = await indexEquipos({ cantidad: 100, pagina: 1 });
       setEquipos(resp.data || []);
     } catch (err) {
       console.error("Error al obtener equipos:", err);
     }
-  };
+  }, []);
 
-  const fetchPartidos = async () => {
+  // — Fetch de partidos —
+  const fetchPartidos = useCallback(async () => {
     try {
       const resp = await indexPartidos({
         cantidad: itemsPerPage,
@@ -47,15 +48,16 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
     } catch (err) {
       console.error("Error al obtener partidos:", err);
     }
-  };
+  }, [currentPage, lastPage]);
 
+  // — Efectos —
   useEffect(() => {
     fetchEquipos();
-  }, []);
+  }, [fetchEquipos]);
 
   useEffect(() => {
     fetchPartidos();
-  }, [currentPage]);
+  }, [fetchPartidos]);
 
   useEffect(() => {
     const listener = (e) => {
@@ -63,8 +65,11 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
     };
     window.addEventListener("partidoActualizado", listener);
     return () => window.removeEventListener("partidoActualizado", listener);
-  }, []);
+  }, [fetchPartidos]);
 
+  if (!visible) return null;
+
+  // — Helpers —
   const getEquipoById = (id) =>
     equipos.find((e) => e.id === id) || { nombre: "Desconocido", id_grupo: null };
 
@@ -82,12 +87,10 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       .replace(",", " -");
   };
 
-  // Extrae grupos únicos de equipos por su id_grupo
   const gruposUnicos = [
     ...new Set(equipos.map((e) => e.id_grupo).filter(Boolean)),
   ].sort();
 
-  // Filtrado por grupo y estado
   const partidosFiltrados = partidos.filter((p) => {
     const e1 = getEquipoById(p.equipos?.[0]);
     const e2 = getEquipoById(p.equipos?.[1]);
@@ -286,7 +289,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Cancha</label>
-                <select
+              <select
                 required
                 value={nuevoPartido.cancha}
                 onChange={(e) =>
@@ -325,24 +328,12 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                Fecha
-              </th>
-              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                Equipos
-              </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                Resultado
-              </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                Estado
-              </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                Cancha
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                Acciones
-              </th>
+              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">Fecha</th>
+              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">Equipos</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Resultado</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Estado</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Cancha</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -351,43 +342,16 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
               const e2 = getEquipoById(p.equipos?.[1]);
               return (
                 <tr key={p.id}>
-                  <td className="px-6 py-4 text-center text-sm text-gray-500">
-                    {formatFecha(p.fecha)}
-                  </td>
+                  <td className="px-6 py-4 text-center text-sm text-gray-500">{formatFecha(p.fecha)}</td>
                   <td className="px-6 py-4 text-center">
-                    <div className="text-sm font-medium text-gray-900">
-                      {e1.nombre} vs {e2.nombre}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      Grupo {e1.id_grupo}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{e1.nombre} vs {e2.nombre}</div>
+                    <div className="text-sm text-gray-500">Grupo {e1.id_grupo}</div>
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    {p.resultado ?? "Pendiente"}
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span
-                      className={`px-2 inline-flex py-1 text-xs leading-5 font-semibold rounded-full ${
-                        p.estado?.toUpperCase() === "JUGADO"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {p.estado?.toUpperCase() === "JUGADO"
-                        ? "Finalizado"
-                        : "Programado"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center text-sm text-gray-500">
-                    {p.cancha || "Desconocida"}
-                  </td>
+                  <td className="px-6 py-4 text-center">{p.resultado ?? "Pendiente"}</td>
+                  <td className="px-6 py-4 text-center"><span className={`px-2 inline-flex py-1 text-xs leading-5 font-semibold rounded-full ${p.estado?.toUpperCase() === "JUGADO" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>{p.estado?.toUpperCase() === "JUGADO" ? "Finalizado" : "Programado"}</span></td>
+                  <td className="px-6 py-4 text-center text-sm text-gray-500">{p.cancha || "Desconocida"}</td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
-                    <button
-                      onClick={() => onEditarResultado(p)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
-                    >
-                      {p.estado?.toUpperCase() === "JUGADO" ? "Editar" : "Registrar"}
-                    </button>
+                    <button onClick={() => onEditarResultado(p)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">{p.estado?.toUpperCase() === "JUGADO" ? "Editar" : "Registrar"}</button>
                   </td>
                 </tr>
               );
@@ -399,23 +363,9 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       {/* Paginación */}
       {lastPage > 1 && (
         <div className="flex justify-between items-center bg-white rounded-b-lg shadow p-4 mt-4">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded-md disabled:opacity-50"
-          >
-            Anterior
-          </button>
-          <span className="text-sm text-gray-700">
-            Página {currentPage} de {lastPage}
-          </span>
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))}
-            disabled={currentPage === lastPage}
-            className="px-3 py-1 border rounded-md disabled:opacity-50"
-          >
-            Siguiente
-          </button>
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 border rounded-md disabled:opacity-50">Anterior</button>
+          <span className="text-sm text-gray-700">Página {currentPage} de {lastPage}</span>
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))} disabled={currentPage === lastPage} className="px-3 py-1 border rounded-md disabled:opacity-50">Siguiente</button>
         </div>
       )}
     </div>

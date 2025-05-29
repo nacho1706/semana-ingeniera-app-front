@@ -29,7 +29,7 @@ export default function Home() {
         {/* VIDEO DE FONDO */}
         <video
           className="absolute top-0 left-0 w-full h-100 sm:h-full object-cover z-[-2]"
-          src="/assets/fondo.mp4"
+          src="/assets/fondo.webm"
           autoPlay
           loop
           muted

@@ -47,7 +47,7 @@ export default function AdminPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validCode = process.env.CLAVE_ADMIN;
+    const validCode = process.env.NEXT_PUBLIC_CLAVE_ADMIN;
     if (code === validCode) {
       localStorage.setItem("isAuthenticated", "true");
       setIsAuthenticated(true);
@@ -92,7 +92,6 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        {console.log("partidosres", partidos)}
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h1 className="text-2xl font-bold mb-6 text-center">Acceso Administrador</h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">

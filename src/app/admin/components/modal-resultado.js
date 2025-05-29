@@ -177,13 +177,6 @@ export default function ModalResultado({
 
         <div className="flex items-center justify-center mb-4">
           <div className="flex flex-col items-center mr-4">
-            {equipos[0]?.logo && (
-              <img
-                src={equipos[0].logo}
-                alt={equipos[0].nombre}
-                className="h-10 hidden sm:block"
-              />
-            )}
             <span className="font-semibold text-sm sm:text-base">
               {equipos[0]?.nombre}
             </span>
@@ -194,13 +187,6 @@ export default function ModalResultado({
           </div>
 
           <div className="flex flex-col items-center ml-4">
-            {equipos[1]?.logo && (
-              <img
-                src={equipos[1].logo}
-                alt={equipos[1].nombre}
-                className="h-10 hidden sm:block"
-              />
-            )}
             <span className="font-semibold text-sm sm:text-base">
               {equipos[1]?.nombre}
             </span>

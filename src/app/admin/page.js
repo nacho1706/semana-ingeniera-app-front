@@ -47,7 +47,7 @@ export default function AdminPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validCode = "12345";
+    const validCode = process.env.CLAVE_ADMIN;
     if (code === validCode) {
       localStorage.setItem("isAuthenticated", "true");
       setIsAuthenticated(true);

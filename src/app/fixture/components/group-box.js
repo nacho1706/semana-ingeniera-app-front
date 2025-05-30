@@ -33,7 +33,7 @@ return (
           <div key={equipo.id} className="flex flex-col items-center">
             <Image
               className="w-16 h-16 sm:h-32"
-              src={`/teams/${equipo.nombre}.svg` || "/teams/escudo_test.svg"}
+              src={`/teams/${equipo.nombre}.svg`}
               width={64}
               height={64}
               alt={`Escudo de ${equipo.nombre}`}

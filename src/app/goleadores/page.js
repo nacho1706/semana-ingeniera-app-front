@@ -4,12 +4,19 @@ import { ArrowLeft, Trophy } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getJugadores } from "../lib/api/jugadores";
 import { indexEquipos } from "../lib/api/equipos";
 
 const GoleadoresPage = () => {
+  const router = useRouter();
+
   const [goleadores, setGoleadores] = useState([]);
-  const [equipoGoleador, setEquipoGoleador] = useState([]);
+  const [equipoGoleador, setEquipoGoleador] = useState(null);
+
+  const [teamQuery, setTeamQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
 
   useEffect(() => {
     const fetchGoleadores = async () => {
@@ -20,24 +27,19 @@ const GoleadoresPage = () => {
           goleador: 1,
           equipo_goleador: 1,
         });
-        console.log("jugadores: ", jugadores);
         const equipos = await indexEquipos({ cantidad: 100, pagina: 1 });
-        
+
+        // Mapear equipo por jugador
         const jugadoresFixed = jugadores.data.map((jugador) => {
-            const equipo = equipos.data.find((e) => e.id == jugador.id_equipo);
-            console.log("equipo: ", equipo.nombre); //probar despues con otro
-            return {
-                ...jugador,
-                equipo: equipo ? equipo.nombre : "Desconocido",
-            };
+          const equipo = equipos.data.find((e) => e.id === jugador.id_equipo);
+          return {
+            ...jugador,
+            equipo: equipo?.nombre || "Desconocido",
+          };
         });
         setGoleadores(jugadoresFixed);
-        
-        
-        const equipoGoleador = jugadores.equipo_con_mas_goles;
-        console.log("Equipo con más goles:", equipoGoleador);
-        setEquipoGoleador(equipoGoleador);
 
+        setEquipoGoleador(jugadores.equipo_con_mas_goles);
       } catch (error) {
         console.error("Error al obtener los goleadores:", error);
       }
@@ -45,9 +47,49 @@ const GoleadoresPage = () => {
     fetchGoleadores();
   }, []);
 
+  // Cuando cambia el input de búsqueda
+  const handleInputChange = async (e) => {
+    const value = e.target.value;
+    setTeamQuery(value);
+    setSelectedTeamId(null);
+
+    if (value.trim().length > 1) {
+      try {
+        const res = await indexEquipos({
+          cantidad: 10,
+          pagina: 1,
+          nombre: value.trim(),
+        });
+        setSuggestions(res.data || []);
+      } catch (err) {
+        console.error("Error al buscar equipos:", err);
+        setSuggestions([]);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  // Al seleccionar una sugerencia
+  const handleSelect = (equipo) => {
+    setTeamQuery(equipo.nombre);
+    setSelectedTeamId(equipo.id);
+    setSuggestions([]);
+  };
+
+  // Al enviar el formulario
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const id = selectedTeamId || suggestions[0]?.id;
+    if (id) {
+      router.push(`/goleadores/${id}`);
+    } else {
+      alert("Selecciona un equipo de la lista");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#ffaa8d] via-[#ff7f5c] to-[#ff5533] text-black">
-      {console.log("goleadores: ", goleadores)}
       <header className="p-4 flex items-center">
         <Link href="/" className="text-white mr-4">
           <ArrowLeft size={24} />
@@ -63,6 +105,36 @@ const GoleadoresPage = () => {
           <h2 className="text-xl font-bold mb-4 text-center">
             Tabla de Goleadores
           </h2>
+
+          {/* Buscador con autocomplete */}
+          <form onSubmit={handleSearch} className="relative flex mb-6">
+            <input
+              type="text"
+              value={teamQuery}
+              onChange={handleInputChange}
+              placeholder="Buscar por nombre de equipo"
+              className="border p-2 rounded-l-md flex-grow focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="bg-orange-500 text-white px-4 rounded-r-md hover:bg-orange-600"
+            >
+              Buscar
+            </button>
+            {suggestions.length > 0 && (
+              <ul className="absolute top-full left-0 right-0 bg-white border rounded-b-md shadow z-10 max-h-48 overflow-auto">
+                {suggestions.map((eq) => (
+                  <li
+                    key={eq.id}
+                    onClick={() => handleSelect(eq)}
+                    className="px-4 py-2 hover:bg-orange-100 cursor-pointer"
+                  >
+                    {eq.nombre}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </form>
 
           {/* Tabla de goleadores */}
           <div className="overflow-x-auto">
@@ -114,17 +186,15 @@ const GoleadoresPage = () => {
                       <span className="font-medium">{jugador.nombre}</span>
                     </td>
                     <td className="p-3">
-                      <div className="flex items-center justify-center sm:flex sm:flex-col">
-                        <div className="mr-2 sm:mr-0">
-                          <Image
-                            className="w-16 h-16 mx-auto sm:h-24"
-                            src={`/teams/${jugador.equipo}.svg`}
-                            width={64}
-                            height={64}
-                            alt={`Equipo ${jugador.equipo}`}
-                          />
-                        </div>
-                        <span className="text-sm hidden sm:inline">
+                      <div className="flex items-center justify-center sm:flex-col">
+                        <Image
+                          className="w-16 h-16 mx-auto sm:h-24"
+                          src={`/teams/${jugador.equipo}.svg`}
+                          width={64}
+                          height={64}
+                          alt={`Equipo ${jugador.equipo}`}
+                        />
+                        <span className="text-sm hidden sm:inline mt-2">
                           {jugador.equipo}
                         </span>
                       </div>
@@ -165,44 +235,40 @@ const GoleadoresPage = () => {
                 <p className="text-sm text-gray-600">{goleadores[0].equipo}</p>
               </div>
 
-              {/* Equipo menos goleado (dato estático por ahora) */}
+              {/* Equipo menos goleado */}
               <div className="bg-blue-50 p-4 rounded-lg text-center">
                 <div className="text-blue-500 mx-auto mb-2">⚽</div>
                 <h3 className="font-bold text-lg">Equipo menos goleado</h3>
                 <p className="text-2xl font-bold text-blue-600">SAN SOCALO</p>
-                <div className="sm:pt-5">
-                  <Image
-                    className="w-14 h-14 mx-auto sm:h-24 mt-4"
-                    src={`/teams/${goleadores[0].equipo}.svg`}
-                    width={32}
-                    height={32}
-                    alt={`Equipo ${goleadores[0].equipo}`}
-                  />
-                  <p className="text-sm text-gray-600">
-                    {goleadores[0].equipo}
-                  </p>
-                </div>
+                <Image
+                  className="w-14 h-14 mx-auto sm:h-24 mt-4"
+                  src={`/teams/${goleadores[0].equipo}.svg`}
+                  width={32}
+                  height={32}
+                  alt={`Equipo ${goleadores[0].equipo}`}
+                />
+                <p className="text-sm text-gray-600">
+                  {goleadores[0].equipo}
+                </p>
               </div>
 
-              {/* Equipo más goleador (usa el del primer goleador) */}
+              {/* Equipo más goleador */}
               <div className="bg-green-50 p-4 rounded-lg text-center">
                 <div className="text-green-500 mx-auto mb-2">🎯</div>
                 <h3 className="font-bold text-lg">Equipo más goleador</h3>
-                 <p className="text-2xl font-bold text-green-600">
-                  {equipoGoleador.total_goles} goles
+                <p className="text-2xl font-bold text-green-600">
+                  {equipoGoleador?.total_goles || 0} goles
                 </p>
-                <div className="sm:pt-5">
-                  <Image
-                    className="w-14 h-14 mx-auto sm:h-24 mt-4"
-                    src={`/teams/${goleadores[0].equipo}.svg`}
-                    width={32}
-                    height={32}
-                    alt={`Equipo ${goleadores[0].equipo}`}
-                  />
-                  <p className="text-sm text-gray-600">
-                    {equipoGoleador.nombre_equipo || "Desconocido"}
-                  </p>
-                </div>
+                <Image
+                  className="w-14 h-14 mx-auto sm:h-24 mt-4"
+                  src={`/teams/${equipoGoleador?.nombre_equipo || goleadores[0].equipo}.svg`}
+                  width={32}
+                  height={32}
+                  alt={`Equipo ${equipoGoleador?.nombre_equipo || goleadores[0].equipo}`}
+                />
+                <p className="text-sm text-gray-600">
+                  {equipoGoleador?.nombre_equipo || "Desconocido"}
+                </p>
               </div>
             </div>
           )}

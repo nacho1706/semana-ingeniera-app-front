@@ -139,7 +139,7 @@ export default function AdminPage() {
             localStorage.removeItem("isAuthenticated");
             setIsAuthenticated(false);
           }}
-          className="text-sm text-gray-600 hover:text-gray-900"
+          className="text-sm text-black hover:text-gray-900"
         >
           Cerrar sesión
         </button>
@@ -158,7 +158,7 @@ export default function AdminPage() {
               className={`px-4 py-2 ${
                 activeTab === id
                   ? "border-b-2 border-orange-500 text-orange-600"
-                  : "text-gray-600"
+                  : "text-black"
               }`}
             >
               {label}

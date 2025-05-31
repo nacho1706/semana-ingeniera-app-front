@@ -164,7 +164,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       {/* Filtros */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <div className="flex flex-wrap items-center gap-4">
-          <Filter className="h-4 w-4 text-gray-500" />
+          <Filter className="h-4 w-4 text-black" />
           <select
             value={filtroGrupo}
             onChange={(e) => setFiltroGrupo(e.target.value)}
@@ -192,7 +192,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                 setFiltroGrupo("");
                 setFiltroEstado("");
               }}
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="text-sm text-black hover:text-black"
             >
               Limpiar filtros
             </button>
@@ -319,7 +319,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
             <button
               type="button"
               onClick={() => setShowPartidoForm(false)}
-              className="px-4 py-2 border rounded-md text-gray-600"
+              className="px-4 py-2 border rounded-md text-black"
             >
               Cancelar
             </button>
@@ -338,13 +338,13 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Eliminar</th>
-              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">Fecha</th>
-              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">Equipos</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Resultado</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Estado</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Cancha</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Eliminar</th>
+              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-black uppercase">Fecha</th>
+              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-black uppercase">Equipos</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Resultado</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Estado</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Cancha</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-black uppercase">Acciones</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -358,10 +358,10 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                       <XCircle className="h-5 w-5" />
                     </button>
                   </td>
-                  <td className="px-6 py-4 text-center text-sm text-gray-500">{formatFecha(p.fecha)}</td>
+                  <td className="px-6 py-4 text-center text-sm text-black">{formatFecha(p.fecha)}</td>
                   <td className="px-6 py-4 text-center">
-                    <div className="text-sm font-medium text-gray-900">{e1.nombre} vs {e2.nombre}</div>
-                    <div className="text-sm text-gray-500">Grupo {e1.id_grupo}</div>
+                    <div className="text-sm font-medium text-black">{e1.nombre} vs {e2.nombre}</div>
+                    <div className="text-sm text-black">Grupo {e1.id_grupo}</div>
                   </td>
                   <td className="px-6 py-4 text-center">{p.resultado ?? "Pendiente"}</td>
                   <td className="px-6 py-4 text-center">
@@ -375,7 +375,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                       {p.estado?.toUpperCase() === "JUGADO" ? "Finalizado" : "Programado"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-center text-sm text-gray-500">{p.cancha || "Desconocida"}</td>
+                  <td className="px-6 py-4 text-center text-sm text-black">{p.cancha || "Desconocida"}</td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
                     <button
                       onClick={() => onEditarResultado(p)}
@@ -401,7 +401,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
           >
             Anterior
           </button>
-          <span className="text-sm text-gray-700">Página {currentPage} de {lastPage}</span>
+          <span className="text-sm text-black">Página {currentPage} de {lastPage}</span>
           <button
             onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))}
             disabled={currentPage === lastPage}

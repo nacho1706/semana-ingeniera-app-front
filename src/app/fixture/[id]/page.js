@@ -50,69 +50,81 @@ export default function GrupoDetalle({ params }) {
       </header>
 
       <main className="flex-1 p-4">
-        <div className="sm:flex sm:flex-row sm:justify-center sm:align-center">
-          <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div className="sm:flex sm:justify-center">
+          {/* TARJETA “Equipos” con ancho máximo y centrado */}
+          <div className="bg-white rounded-lg shadow-md p-4 mb-6 w-full sm:w-3/4 lg:w-2/3 mx-auto">
             <h2 className="text-xl font-bold mb-4 text-center">Equipos</h2>
 
             {/* Tabla de posiciones */}
-            <div className="overflow-x-auto sm:flex sm:justify-center sm:px-10">
-              <table className="w-full sm:w-200 mb-4">
+            <div className="overflow-x-auto">
+              <table className="table-fixed min-w-full mb-4">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="p-2 text-left pr-16">Equipo</th>
-                    <th className="p-2 text-center">PTS</th>
-                    <th className="p-2 text-center">PJ</th>
-                    <th className="p-2 text-center">PG</th>
-                    <th className="p-2 text-center">PE</th>
-                    <th className="p-2 text-center">PP</th>
-                    <th className="p-2 text-center">GF</th>
-                    <th className="p-2 text-center">DG</th>
+                    {/* Esta columna ocupa el 40% del ancho total */}
+                    <th className="w-2/5 pr-24 p-2 text-left align-middle">Equipo</th>
+                    <th className="p-2 text-center align-middle">PTS</th>
+                    <th className="p-2 text-center align-middle">PJ</th>
+                    <th className="p-2 text-center align-middle">PG</th>
+                    <th className="p-2 text-center align-middle">PE</th>
+                    <th className="p-2 text-center align-middle">PP</th>
+                    <th className="p-2 text-center align-middle">GF</th>
+                    <th className="p-2 text-center align-middle">DG</th>
                   </tr>
                 </thead>
                 <tbody>
                   {equipos.map((equipo) => (
-                    <tr key={equipo.id} className="border-b">
-                      <td className="p-2">
-                        <div className="flex items-center">
-                          <div className="mr-2">
+                    <tr key={equipo.id} className="border-b min-h-[64px]">
+                      <td className="p-2 align-middle">
+                        <div className="flex items-center space-x-2">
+                          <div className="flex-shrink-0">
                             <Image
-                              className="w-16 h-16 mx-auto sm:h-32"
-                              src={`/teams/${equipo.nombre}.svg` || "/teams/escudo_test.svg"}
+                              src={`/teams/${equipo.nombre}.svg`}
                               width={64}
                               height={64}
+                              className="w-16 h-16 object-contain"
                               alt={`Escudo de ${equipo.nombre}`}
                             />
                           </div>
-                          <span className="text-sm">{equipo.nombre}</span>
+                          <span className="text-xs font-medium break-words max-w-[120px]">
+                            {equipo.nombre}
+                          </span>
                         </div>
                       </td>
-                      <td className="p-2 text-center font-bold">{equipo.puntos}</td>
-                      <td className="p-2 text-center">{equipo.PJ}</td>
-                      <td className="p-2 text-center">{equipo.PG}</td>
-                      <td className="p-2 text-center">{equipo.PE}</td>
-                      <td className="p-2 text-center">{equipo.PP}</td>
-                      <td className="p-2 text-center">{equipo.GF}</td>
-                      <td className="p-2 text-center">{equipo.DG}</td>
+                      <td className="p-2 text-center font-bold align-middle">
+                        {equipo.puntos}
+                      </td>
+                      <td className="p-2 text-center align-middle">{equipo.PJ}</td>
+                      <td className="p-2 text-center align-middle">{equipo.PG}</td>
+                      <td className="p-2 text-center align-middle">{equipo.PE}</td>
+                      <td className="p-2 text-center align-middle">{equipo.PP}</td>
+                      <td className="p-2 text-center align-middle">{equipo.GF}</td>
+                      <td className="p-2 text-center align-middle">{equipo.DG}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <div className="text-xs text-gray-500 mb-4 sm:flex sm:justify-center">
+            <div className="text-xs text-gray-500 mb-4 text-center">
               <p>
                 PTS: Puntos, PJ: Partidos jugados, PG: Partidos ganados, PE:
-                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor, DG: Diferencia de goles
+                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor, DG:
+                Diferencia de goles
               </p>
             </div>
           </div>
         </div>
+
         {/* Sección de partidos */}
-        <div className="bg-white rounded-lg shadow-md p-4">
+        <div className="bg-white rounded-lg shadow-md p-4 w-full sm:w-3/4 lg:w-2/3 mx-auto">
           <h2 className="text-xl font-bold mb-4 text-center">Partidos</h2>
           <div className="space-y-3">
             {partidos.map((partido, index) => (
-              <PartidoFecha key={partido.id || index} partido={partido} equipos={equipos} />
+              <PartidoFecha
+                key={partido.id || index}
+                partido={partido}
+                equipos={equipos}
+              />
             ))}
           </div>
         </div>

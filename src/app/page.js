@@ -71,12 +71,6 @@ export default function Home() {
             >
               GOLEADORES
             </Link>
-            <Link
-              href="#"
-              className="bg-white text-black px-14 py-2 rounded-xl font-medium"
-            >
-              CANCHAS
-            </Link>
           </div>
         </div>
         <div className="sm:absolute sm:bottom-16 sm:w-full text-xl mt-10 text-center z-20">

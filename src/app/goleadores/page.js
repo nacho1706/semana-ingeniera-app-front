@@ -239,7 +239,7 @@ const GoleadoresPage = () => {
               <div className="bg-blue-50 p-4 rounded-lg text-center">
                 <div className="text-blue-500 mx-auto mb-2">⚽</div>
                 <h3 className="font-bold text-lg">Equipo menos goleado</h3>
-                <p className="text-2xl font-bold text-blue-600">SAN SOCALO</p>
+                {/* <p className="text-2xl font-bold text-blue-600"></p>
                 <Image
                   className="w-14 h-14 mx-auto sm:h-24 mt-4"
                   src={`/teams/${goleadores[0].equipo}.svg`}
@@ -249,7 +249,7 @@ const GoleadoresPage = () => {
                 />
                 <p className="text-sm text-gray-600">
                   {goleadores[0].equipo}
-                </p>
+                </p> */}
               </div>
 
               {/* Equipo más goleador */}

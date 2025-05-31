@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { PlusCircle, Filter } from "lucide-react";
-import { createPartido, indexPartidos } from "../../lib/api/partidos";
+import { PlusCircle, Filter, XCircle } from "lucide-react";
+import { createPartido, indexPartidos, deletePartido } from "../../lib/api/partidos";
 import { indexEquipos } from "../../lib/api/equipos";
 
 export default function AdminPartidos({ onEditarResultado, visible = true }) {
@@ -134,6 +134,16 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       alert("Partido creado correctamente");
     } catch (err) {
       console.error("Error creando partido:", err);
+    }
+  };
+
+  const handleEliminarPartido = async (id) => {
+    if (!confirm("¿Querés eliminar este partido?")) return;
+    try {
+      await deletePartido(id);
+      setPartidos((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error("Error eliminando partido:", err);
     }
   };
 
@@ -328,6 +338,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
+              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Eliminar</th>
               <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">Fecha</th>
               <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-gray-500 uppercase">Equipos</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Resultado</th>
@@ -342,16 +353,36 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
               const e2 = getEquipoById(p.equipos?.[1]);
               return (
                 <tr key={p.id}>
+                  <td className="px-6 py-4 text-center">
+                    <button onClick={() => handleEliminarPartido(p.id)} className="text-red-600 hover:text-red-800">
+                      <XCircle className="h-5 w-5" />
+                    </button>
+                  </td>
                   <td className="px-6 py-4 text-center text-sm text-gray-500">{formatFecha(p.fecha)}</td>
                   <td className="px-6 py-4 text-center">
                     <div className="text-sm font-medium text-gray-900">{e1.nombre} vs {e2.nombre}</div>
                     <div className="text-sm text-gray-500">Grupo {e1.id_grupo}</div>
                   </td>
                   <td className="px-6 py-4 text-center">{p.resultado ?? "Pendiente"}</td>
-                  <td className="px-6 py-4 text-center"><span className={`px-2 inline-flex py-1 text-xs leading-5 font-semibold rounded-full ${p.estado?.toUpperCase() === "JUGADO" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>{p.estado?.toUpperCase() === "JUGADO" ? "Finalizado" : "Programado"}</span></td>
+                  <td className="px-6 py-4 text-center">
+                    <span
+                      className={`px-2 inline-flex py-1 text-xs leading-5 font-semibold rounded-full ${
+                        p.estado?.toUpperCase() === "JUGADO"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {p.estado?.toUpperCase() === "JUGADO" ? "Finalizado" : "Programado"}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 text-center text-sm text-gray-500">{p.cancha || "Desconocida"}</td>
                   <td className="px-6 py-4 text-right text-sm font-medium">
-                    <button onClick={() => onEditarResultado(p)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs">{p.estado?.toUpperCase() === "JUGADO" ? "Editar" : "Registrar"}</button>
+                    <button
+                      onClick={() => onEditarResultado(p)}
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+                    >
+                      {p.estado?.toUpperCase() === "JUGADO" ? "Editar" : "Registrar"}
+                    </button>
                   </td>
                 </tr>
               );
@@ -363,9 +394,21 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       {/* Paginación */}
       {lastPage > 1 && (
         <div className="flex justify-between items-center bg-white rounded-b-lg shadow p-4 mt-4">
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1 border rounded-md disabled:opacity-50">Anterior</button>
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border rounded-md disabled:opacity-50"
+          >
+            Anterior
+          </button>
           <span className="text-sm text-gray-700">Página {currentPage} de {lastPage}</span>
-          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))} disabled={currentPage === lastPage} className="px-3 py-1 border rounded-md disabled:opacity-50">Siguiente</button>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))}
+            disabled={currentPage === lastPage}
+            className="px-3 py-1 border rounded-md disabled:opacity-50"
+          >
+            Siguiente
+          </button>
         </div>
       )}
     </div>

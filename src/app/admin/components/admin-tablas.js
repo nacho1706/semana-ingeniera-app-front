@@ -1,7 +1,6 @@
-import React from "react";
-import { indexEquipos } from "../../lib/api/equipos";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { actualizarPuntos, indexEquipos } from "../../lib/api/equipos";
 
 const AdminTablas = () => {
   const [equipos, setEquipos] = useState([]);
@@ -14,8 +13,7 @@ const AdminTablas = () => {
           pagina: 1,
           puntero: 1,
         });
-        const equipos = responseEquipos.data;
-        setEquipos(equipos);
+        setEquipos(responseEquipos.data);
       } catch (error) {
         console.error("Error al obtener los datos del grupo:", error);
       }
@@ -23,8 +21,34 @@ const AdminTablas = () => {
 
     fetchData();
   }, []);
+
+  const handleActualizarPuntajes = async () => {
+    try {
+      const res = await actualizarPuntos();
+      console.log("res: ", res.message);
+
+      if (res.message != "Puntos actualizados correctamente") {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      alert("Resultados actualizados con éxito");
+      window.location.reload();
+
+    } catch (err) {
+      console.error("Error al actualizar puntajes:", err);
+      alert("Hubo un error al actualizar los puntajes");
+    }
+  };
+
   return (
-    <div>
+    <div className="text-black">
+      <div className="flex justify-end py-2 px-4">
+        <button
+          onClick={handleActualizarPuntajes}
+          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
+        >
+          Actualizar puntajes
+        </button>
+      </div>
       <div className="overflow-x-auto sm:flex sm:justify-center sm:px-10">
         <table className="w-full sm:w-200 mb-4">
           <thead>
@@ -45,16 +69,24 @@ const AdminTablas = () => {
                 <td className="p-2">
                   <div className="flex items-center">
                     <div className="mr-2">
-                      <Image
-                        className="w-16 h-16 mx-auto sm:h-32"
-                        src={
-                          `/teams/${equipo.nombre}.svg` ||
-                          "/teams/escudo_test.svg"
-                        }
-                        width={64}
-                        height={64}
-                        alt={`Escudo de ${equipo.nombre}`}
-                      />
+                      {/* 
+                        – w-16 h-16 en móviles 
+                        – sm:w-32 sm:h-32 en pantallas >=640px 
+                        – width/height props en 64px ayudan a Next.js a optimizar el SVG 
+                        – style={{ objectFit: "contain" }} centra y escala sin recorte 
+                      */}
+                      <div className="relative w-16 h-16 sm:w-32 sm:h-32">
+                        <Image
+                          src={`/teams/${equipo.nombre}.svg`}
+                          alt={`Escudo de ${equipo.nombre}`}
+                          fill
+                          style={{ objectFit: "contain" }}
+                          onError={(e) => {
+                            // Si no existe el SVG, carga uno de prueba
+                            e.currentTarget.src = "/teams/Equipo A.svg";
+                          }}
+                        />
+                      </div>
                     </div>
                     <span className="text-sm">{equipo.nombre}</span>
                   </div>

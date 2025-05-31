@@ -36,3 +36,9 @@ export const updatePartido = async (partido: {
   return data;
 };
 
+export const deletePartido = async (id: number) => {
+  const { data } = await api.delete(`/partidos/delete/${id}`);
+  return data;
+}
+
+

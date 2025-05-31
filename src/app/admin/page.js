@@ -8,7 +8,7 @@ import ModalResultado from "./components/modal-resultado";
 import AdminTablas from "./components/admin-tablas";
 import { indexEquipos } from "../lib/api/equipos";
 import { indexPartidos, updatePartido } from "../lib/api/partidos";
-import { getJugadores } from "../lib/api/jugadores";
+// import { getJugadores } from "../lib/api/jugadores";
 
 export default function AdminPage() {
   const [code, setCode] = useState("");
@@ -34,11 +34,11 @@ export default function AdminPage() {
     async function fetchDatos() {
       try {
         const equiposRes = await indexEquipos({ cantidad: 100, pagina: 1 });
-        const jugadoresRes = await getJugadores({ cantidad: 500, pagina: 1 });
+        // const jugadoresRes = await getJugadores({ cantidad: 500, pagina: 1 });
         const partidosRes = await indexPartidos({ cantidad: 100, pagina: 1 });
 
         setEquipos(equiposRes.data || []);
-        setJugadores(jugadoresRes.data || []);
+        // setJugadores(jugadoresRes.data || []);
         setPartidos(partidosRes.data || []);
       } catch (err) {
         console.error("Error cargando datos:", err);
@@ -97,7 +97,7 @@ export default function AdminPage() {
   // Mostrar formulario de login si no está autenticado
   if (!isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 text-black">
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h1 className="text-2xl font-bold mb-6 text-center">Acceso Administrador</h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">

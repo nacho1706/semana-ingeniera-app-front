@@ -14,3 +14,8 @@ export const indexEquipos = async (params: {
   const { data } = await api.get("/equipos/index", { params });
   return data;
 };
+
+export const actualizarPuntos = async () => {
+  const { data } = await api.get("/equipos/actualizarPuntos");
+  return data;
+}

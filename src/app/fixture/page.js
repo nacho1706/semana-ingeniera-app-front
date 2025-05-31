@@ -49,7 +49,7 @@ export default function TournamentGroups() {
           </h1>
         </div>
         <div className="flex-1 px-4 grid grid-cols-1 gap-4 sm:gap-14 md:grid-cols-3 mb-10">
-          <Link href="/fixture/1" className=" md:col-start-2">
+          <Link href="/fixture/8" className="md:col-start-2">
             <GroupBox groupNumber={8} />
           </Link>
         </div>

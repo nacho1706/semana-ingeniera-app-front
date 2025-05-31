@@ -30,11 +30,14 @@ export default function TournamentGroups() {
           <Link href="/fixture/4" className="">
             <GroupBox groupNumber={4} />
           </Link>
-          <Link href="/" className="">
+          <Link href="/fixture/5" className="">
             <GroupBox groupNumber={5} />
           </Link>
-          <Link href="/" className="">
+          <Link href="/fixture/6" className="">
             <GroupBox groupNumber={6} />
+          </Link>
+          <Link href="/fixture/7" className="">
+            <GroupBox groupNumber={7} />
           </Link>
         </div>
       </div>
@@ -45,18 +48,9 @@ export default function TournamentGroups() {
             FEMENINO
           </h1>
         </div>
-        <div className="flex-1 px-4 grid grid-cols-2 gap-4 sm:gap-14 md:grid-cols-4 mb-10">
-          <Link href="/fixture/1" className="">
-            <GroupBox groupNumber={1} />
-          </Link>
-          <Link href="/fixture/2" className="">
-            <GroupBox groupNumber={2} />
-          </Link>
-          <Link href="/fixture/3" className="">
-            <GroupBox groupNumber={3} />
-          </Link>
-          <Link href="/fixture/4" className="">
-            <GroupBox groupNumber={4} />
+        <div className="flex-1 px-4 grid grid-cols-1 gap-4 sm:gap-14 md:grid-cols-3 mb-10">
+          <Link href="/fixture/1" className=" md:col-start-2">
+            <GroupBox groupNumber={8} />
           </Link>
         </div>
       </div>

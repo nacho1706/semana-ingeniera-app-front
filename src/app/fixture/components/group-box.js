@@ -11,7 +11,7 @@ const [equiposGrupo, setEquiposGrupo] = useState([]);
   useEffect(() => {
     const fetchEquipos = async () => {
       try {
-        const response = await indexEquipos({ cantidad: 4, pagina: 1, grupo: groupNumber });
+        const response = await indexEquipos({ cantidad: 10, pagina: 1, grupo: groupNumber });
         const equipos = response.data;
 
         setEquiposGrupo(equipos);
@@ -32,7 +32,7 @@ return (
         {equiposGrupo.map((equipo) => (
           <div key={equipo.id} className="flex flex-col items-center">
             <Image
-              className="w-16 h-16 sm:h-32"
+              className="w-16 h-16 sm:h-32 sm:w-32"
               src={`/teams/${equipo.nombre}.svg`}
               width={64}
               height={64}

@@ -1,13 +1,36 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { indexEquipos } from "../../../lib/api/equipos";
 
-const PartidoFecha = ({ partido, equipos }) => {
+const PartidoFecha = ({ partido }) => {
+  const [equipos, setEquipos] = useState([]);
+
+  // Fetch de equipos al montar el componente
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseEquipos = await indexEquipos({
+          cantidad: 40,
+          pagina: 1,
+        });
+        setEquipos(responseEquipos.data || []);
+      } catch (error) {
+        console.error("Error al obtener los datos de equipos:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Buscar equipo1 y equipo2 en el estado local
   const equipo1 =
     equipos.find((e) => e.id === partido.equipos[0]) || { nombre: "Desconocido" };
   const equipo2 =
     equipos.find((e) => e.id === partido.equipos[1]) || { nombre: "Desconocido" };
 
+  // Formateo de fecha en zona local "es-AR"
   const fechaFormatted = new Date(partido.fecha).toLocaleString("es-AR", {
     year: "numeric",
     month: "2-digit",
@@ -16,7 +39,7 @@ const PartidoFecha = ({ partido, equipos }) => {
     minute: "2-digit",
   });
 
-  // Separamos goles en dos variables bonit@s
+  // Separar goles (si existe resultado) o dejar vacíos
   const [goles1 = "", goles2 = ""] = partido.resultado
     ? partido.resultado.split("-").map((s) => s.trim())
     : ["", ""];

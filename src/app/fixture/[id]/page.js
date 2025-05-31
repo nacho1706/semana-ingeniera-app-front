@@ -24,7 +24,7 @@ export default function GrupoDetalle({ params }) {
         const partidos = responsePartidos.data;
 
         const responseEquipos = await indexEquipos({
-          cantidad: 10,
+          cantidad: 4,
           pagina: 1,
           grupo: id,
           puntero: 1,

@@ -16,7 +16,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
     grupo: "",
     equipo1Id: "",
     equipo2Id: "",
-    fecha: "",
+    fecha: "", // "YYYY-MM-DDTHH:mm"
     cancha: "",
   });
 
@@ -73,11 +73,13 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
   const getEquipoById = (id) =>
     equipos.find((e) => e.id === id) || { nombre: "Desconocido", id_grupo: null };
 
+  // Asegurar mostrar siempre hora en zona de Argentina
   const formatFecha = (f) => {
     if (!f) return "Desconocida";
     const d = new Date(f);
     return d
       .toLocaleString("es-AR", {
+        timeZone: "America/Argentina/Buenos_Aires",
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -111,12 +113,17 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       return alert("Seleccioná grupo y ambos equipos");
 
     try {
+      // Construir un ISO string interpretando el input como hora Argentina (UTC-3)
+      // Ej: "2025-06-01T15:30" => "2025-06-01T15:30:00-03:00"
+      const fechaArgentina = `${nuevoPartido.fecha}:00-03:00`;
+      const fechaISOArg = new Date(fechaArgentina).toISOString();
+
       const partidoData = {
         equipos: [
           Number(nuevoPartido.equipo1Id),
           Number(nuevoPartido.equipo2Id),
         ],
-        fecha: nuevoPartido.fecha,
+        fecha: fechaISOArg,
         estado: "PENDIENTE",
         resultado: null,
         cancha: nuevoPartido.cancha,
@@ -218,8 +225,6 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                 setNuevoPartido({
                   ...nuevoPartido,
                   grupo: e.target.value,
-                  equipo1Id: "",
-                  equipo2Id: "",
                 })
               }
               className="w-full p-2 border rounded-md"
@@ -244,16 +249,13 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                   setNuevoPartido({ ...nuevoPartido, equipo1Id: e.target.value })
                 }
                 className="w-full p-2 border rounded-md"
-                disabled={!nuevoPartido.grupo}
               >
                 <option value="">Seleccionar equipo</option>
-                {equipos
-                  .filter((eq) => eq.id_grupo?.toString() === nuevoPartido.grupo)
-                  .map((eq) => (
-                    <option key={eq.id} value={eq.id}>
-                      {eq.nombre} (Grupo {eq.id_grupo})
-                    </option>
-                  ))}
+                {equipos.map((eq) => (
+                  <option key={eq.id} value={eq.id}>
+                    {eq.nombre} (Grupo {eq.id_grupo})
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -269,11 +271,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
               >
                 <option value="">Seleccionar equipo</option>
                 {equipos
-                  .filter(
-                    (eq) =>
-                      eq.id_grupo?.toString() === nuevoPartido.grupo &&
-                      eq.id.toString() !== nuevoPartido.equipo1Id
-                  )
+                  .filter((eq) => eq.id.toString() !== nuevoPartido.equipo1Id)
                   .map((eq) => (
                     <option key={eq.id} value={eq.id}>
                       {eq.nombre} (Grupo {eq.id_grupo})
@@ -296,6 +294,9 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                 }
                 className="w-full p-2 border rounded-md"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                La hora seleccionada se interpretará como zona horaria Argentina (UTC−3).
+              </p>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Cancha</label>

@@ -18,18 +18,22 @@ const GoleadoresPage = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
 
+  // Nuevo estado para el género: "M" o "F"
+  const [gender, setGender] = useState("M");
+
   useEffect(() => {
     const fetchGoleadores = async () => {
       try {
+        // Se pasa el género como parte de los parámetros
         const jugadores = await getJugadores({
           cantidad: 10,
           pagina: 1,
           goleador: 1,
           equipo_goleador: 1,
+          genero: gender, // ⬅ aquí
         });
         const equipos = await indexEquipos({ cantidad: 100, pagina: 1 });
 
-        // Mapear equipo por jugador
         const jugadoresFixed = jugadores.data.map((jugador) => {
           const equipo = equipos.data.find((e) => e.id === jugador.id_equipo);
           return {
@@ -38,14 +42,13 @@ const GoleadoresPage = () => {
           };
         });
         setGoleadores(jugadoresFixed);
-
         setEquipoGoleador(jugadores.equipo_con_mas_goles);
       } catch (error) {
         console.error("Error al obtener los goleadores:", error);
       }
     };
     fetchGoleadores();
-  }, []);
+  }, [gender]); // ⬅ volverá a ejecutarse cada vez que cambie gender
 
   // Cuando cambia el input de búsqueda
   const handleInputChange = async (e) => {
@@ -77,7 +80,7 @@ const GoleadoresPage = () => {
     setSuggestions([]);
   };
 
-  // Al enviar el formulario
+  // Al enviar el formulario de búsqueda de equipo
   const handleSearch = (e) => {
     e.preventDefault();
     const id = selectedTeamId || suggestions[0]?.id;
@@ -105,6 +108,30 @@ const GoleadoresPage = () => {
           <h2 className="text-xl font-bold mb-4 text-center">
             Tabla de Goleadores
           </h2>
+
+          {/* Botones para filtrar por género */}
+          <div className="flex justify-center space-x-4 mb-6">
+            <button
+              onClick={() => setGender("M")}
+              className={`px-4 py-2 rounded-md font-medium ${
+                gender === "M"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-black"
+              }`}
+            >
+              MASCULINO
+            </button>
+            <button
+              onClick={() => setGender("F")}
+              className={`px-4 py-2 rounded-md font-medium ${
+                gender === "F"
+                  ? "bg-pink-600 text-white"
+                  : "bg-gray-200 text-black"
+              }`}
+            >
+              FEMENINO
+            </button>
+          </div>
 
           {/* Buscador con autocomplete */}
           <form onSubmit={handleSearch} className="relative flex mb-6">
@@ -235,20 +262,21 @@ const GoleadoresPage = () => {
                 <p className="text-sm text-gray-600">{goleadores[0].equipo}</p>
               </div>
 
-              {/* Equipo menos goleado */}
+              {/* Equipo menos goleado (placeholder, completa tu lógica) */}
               <div className="bg-blue-50 p-4 rounded-lg text-center">
                 <div className="text-blue-500 mx-auto mb-2">⚽</div>
                 <h3 className="font-bold text-lg">Equipo menos goleado</h3>
+                {/* Si quieres mostrar datos, reemplaza lo que está comentado */}
                 {/* <p className="text-2xl font-bold text-blue-600"></p>
                 <Image
                   className="w-14 h-14 mx-auto sm:h-24 mt-4"
-                  src={`/teams/${goleadores[0].equipo}.svg`}
+                  src={`/teams/${equipoMenosGoleado.equipo}.svg`}
                   width={32}
                   height={32}
-                  alt={`Equipo ${goleadores[0].equipo}`}
+                  alt={`Equipo ${equipoMenosGoleado.equipo}`}
                 />
                 <p className="text-sm text-gray-600">
-                  {goleadores[0].equipo}
+                  {equipoMenosGoleado.equipo}
                 </p> */}
               </div>
 
@@ -261,7 +289,9 @@ const GoleadoresPage = () => {
                 </p>
                 <Image
                   className="w-14 h-14 mx-auto sm:h-24 mt-4"
-                  src={`/teams/${equipoGoleador?.nombre_equipo || goleadores[0].equipo}.svg`}
+                  src={`/teams/${
+                    equipoGoleador?.nombre_equipo || goleadores[0].equipo
+                  }.svg`}
                   width={32}
                   height={32}
                   alt={`Equipo ${equipoGoleador?.nombre_equipo || goleadores[0].equipo}`}

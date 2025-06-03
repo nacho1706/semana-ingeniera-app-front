@@ -68,6 +68,7 @@ export default function GrupoDetalle({ params }) {
                     <th className="p-2 text-center align-middle">PE</th>
                     <th className="p-2 text-center align-middle">PP</th>
                     <th className="p-2 text-center align-middle">GF</th>
+                    <th className="p-2 text-center align-middle">GC</th>
                     <th className="p-2 text-center align-middle">DG</th>
                   </tr>
                 </thead>
@@ -98,6 +99,7 @@ export default function GrupoDetalle({ params }) {
                       <td className="p-2 text-center align-middle">{equipo.PE}</td>
                       <td className="p-2 text-center align-middle">{equipo.PP}</td>
                       <td className="p-2 text-center align-middle">{equipo.GF}</td>
+                      <td className="p-2 text-center align-middle">{equipo.GC}</td>
                       <td className="p-2 text-center align-middle">{equipo.DG}</td>
                     </tr>
                   ))}

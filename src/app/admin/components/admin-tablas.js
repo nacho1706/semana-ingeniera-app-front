@@ -60,6 +60,7 @@ const AdminTablas = () => {
               <th className="p-2 text-center">PE</th>
               <th className="p-2 text-center">PP</th>
               <th className="p-2 text-center">GF</th>
+              <th className="p-2 text-center">GC</th>
               <th className="p-2 text-center">DG</th>
             </tr>
           </thead>
@@ -97,6 +98,7 @@ const AdminTablas = () => {
                 <td className="p-2 text-center">{equipo.PE}</td>
                 <td className="p-2 text-center">{equipo.PP}</td>
                 <td className="p-2 text-center">{equipo.GF}</td>
+                <td className="p-2 text-center">{equipo.GC}</td>
                 <td className="p-2 text-center">{equipo.DG}</td>
               </tr>
             ))}

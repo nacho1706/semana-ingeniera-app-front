@@ -2,30 +2,38 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { PlusCircle, Filter, XCircle } from "lucide-react";
-import { createPartido, indexPartidos, deletePartido } from "../../lib/api/partidos";
+import { createPartido, deletePartido } from "../../lib/api/partidos";
 import { indexEquipos } from "../../lib/api/equipos";
 
-export default function AdminPartidos({ onEditarResultado, visible = true }) {
-  // — Hooks siempre al tope —
+/**
+ * Props recibidas desde AdminPage:
+ * - partidos: array de partidos (ya traídos por el padre)
+ * - setPartidos: función para actualizar la lista (en el padre)
+ * - onEditarResultado: callback que abre el modal en el padre
+ * - visible: controla si mostrar o no este componente (tab “Partidos”)
+ */
+export default function AdminPartidos({
+  partidos,
+  setPartidos,
+  onEditarResultado,
+  visible = true,
+}) {
+  // — Hooks (estado local únicamente para creación/filtros) —
   const [equipos, setEquipos] = useState([]);
-  const [partidos, setPartidos] = useState([]);
   const [filtroGrupo, setFiltroGrupo] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("");
   const [showPartidoForm, setShowPartidoForm] = useState(false);
+
+  // Estado para el formulario “Nuevo partido”
   const [nuevoPartido, setNuevoPartido] = useState({
     grupo: "",
     equipo1Id: "",
     equipo2Id: "",
-    fecha: "", // "YYYY-MM-DDTHH:mm"
+    fecha: "", // “YYYY-MM-DDTHH:mm”
     cancha: "",
   });
 
-  // — Paginación —
-  const [currentPage, setCurrentPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
-  const itemsPerPage = 10;
-
-  // — Fetch de equipos —
+  // — Fetch de equipos (solo aquí) —
   const fetchEquipos = useCallback(async () => {
     try {
       const resp = await indexEquipos({ cantidad: 100, pagina: 1 });
@@ -35,37 +43,9 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
     }
   }, []);
 
-  // — Fetch de partidos —
-  const fetchPartidos = useCallback(async () => {
-    try {
-      const resp = await indexPartidos({
-        cantidad: itemsPerPage,
-        pagina: currentPage,
-      });
-      setPartidos(resp.data || []);
-      setCurrentPage(resp.current_page ?? currentPage);
-      setLastPage(resp.total_pages ?? lastPage);
-    } catch (err) {
-      console.error("Error al obtener partidos:", err);
-    }
-  }, [currentPage, lastPage]);
-
-  // — Efectos —
   useEffect(() => {
     fetchEquipos();
   }, [fetchEquipos]);
-
-  useEffect(() => {
-    fetchPartidos();
-  }, [fetchPartidos]);
-
-  useEffect(() => {
-    const listener = (e) => {
-      if (e.detail === "actualizarPartidos") fetchPartidos();
-    };
-    window.addEventListener("partidoActualizado", listener);
-    return () => window.removeEventListener("partidoActualizado", listener);
-  }, [fetchPartidos]);
 
   if (!visible) return null;
 
@@ -73,7 +53,6 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
   const getEquipoById = (id) =>
     equipos.find((e) => e.id === id) || { nombre: "Desconocido", id_grupo: null };
 
-  // Asegurar mostrar siempre hora en zona de Argentina
   const formatFecha = (f) => {
     if (!f) return "Desconocida";
     const d = new Date(f);
@@ -89,32 +68,45 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
       .replace(",", " -");
   };
 
+  // Obtengo los grupos únicos a partir de los equipos cargados
   const gruposUnicos = [
     ...new Set(equipos.map((e) => e.id_grupo).filter(Boolean)),
   ].sort();
 
-  const partidosFiltrados = partidos.filter((p) => {
+  // Filtro los partidos que me pasan por props según grupo/estado
+  const partidosFiltrados = (partidos || []).filter((p) => {
     const e1 = getEquipoById(p.equipos?.[0]);
     const e2 = getEquipoById(p.equipos?.[1]);
+
     const grupoOk =
       !filtroGrupo ||
       e1.id_grupo?.toString() === filtroGrupo ||
       e2.id_grupo?.toString() === filtroGrupo;
+
     const estadoOk =
       !filtroEstado || p.estado?.toUpperCase() === filtroEstado.toUpperCase();
+
     return grupoOk && estadoOk;
   });
 
+  // — Crear nuevo partido —
   const handleCrearPartido = async (e) => {
     e.preventDefault();
-    if (nuevoPartido.equipo1Id === nuevoPartido.equipo2Id)
+
+    // Validaciones mínimas
+    if (nuevoPartido.equipo1Id === nuevoPartido.equipo2Id) {
       return alert("Los equipos no pueden ser iguales");
-    if (!nuevoPartido.grupo || !nuevoPartido.equipo1Id || !nuevoPartido.equipo2Id)
+    }
+    if (
+      !nuevoPartido.grupo ||
+      !nuevoPartido.equipo1Id ||
+      !nuevoPartido.equipo2Id
+    ) {
       return alert("Seleccioná grupo y ambos equipos");
+    }
 
     try {
-      // Construir un ISO string interpretando el input como hora Argentina (UTC-3)
-      // Ej: "2025-06-01T15:30" => "2025-06-01T15:30:00-03:00"
+      // Interpreto el input “datetime-local” como hora Argentina (UTC-3)
       const fechaArgentina = `${nuevoPartido.fecha}:00-03:00`;
       const fechaISOArg = new Date(fechaArgentina).toISOString();
 
@@ -128,8 +120,13 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         resultado: null,
         cancha: nuevoPartido.cancha,
       };
+
       const nuevo = await createPartido(partidoData);
+
+      // Agrego el partido recién creado al array que me pasan por props
       setPartidos((prev) => [nuevo, ...prev]);
+
+      // Limpio el formulario y cierro
       setNuevoPartido({
         grupo: "",
         equipo1Id: "",
@@ -138,16 +135,19 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         cancha: "",
       });
       setShowPartidoForm(false);
+
       alert("Partido creado correctamente");
     } catch (err) {
       console.error("Error creando partido:", err);
     }
   };
 
+  // — Eliminar un partido —
   const handleEliminarPartido = async (id) => {
     if (!confirm("¿Querés eliminar este partido?")) return;
     try {
       await deletePartido(id);
+      // Quito del array local
       setPartidos((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       console.error("Error eliminando partido:", err);
@@ -156,7 +156,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
 
   return (
     <div>
-      {/* Header */}
+      {/* ====== Header ====== */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Gestión de Partidos</h2>
         <button
@@ -168,7 +168,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         </button>
       </div>
 
-      {/* Filtros */}
+      {/* ====== Filtros ====== */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
         <div className="flex flex-wrap items-center gap-4">
           <Filter className="h-4 w-4 text-black" />
@@ -207,7 +207,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         </div>
       </div>
 
-      {/* Formulario Crear Partido */}
+      {/* ====== Formulario “Nuevo Partido” ====== */}
       {showPartidoForm && (
         <form
           onSubmit={handleCrearPartido}
@@ -222,10 +222,7 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
               required
               value={nuevoPartido.grupo}
               onChange={(e) =>
-                setNuevoPartido({
-                  ...nuevoPartido,
-                  grupo: e.target.value,
-                })
+                setNuevoPartido({ ...nuevoPartido, grupo: e.target.value })
               }
               className="w-full p-2 border rounded-md"
             >
@@ -246,7 +243,10 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                 required
                 value={nuevoPartido.equipo1Id}
                 onChange={(e) =>
-                  setNuevoPartido({ ...nuevoPartido, equipo1Id: e.target.value })
+                  setNuevoPartido({
+                    ...nuevoPartido,
+                    equipo1Id: e.target.value,
+                  })
                 }
                 className="w-full p-2 border rounded-md"
               >
@@ -264,7 +264,10 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                 required
                 value={nuevoPartido.equipo2Id}
                 onChange={(e) =>
-                  setNuevoPartido({ ...nuevoPartido, equipo2Id: e.target.value })
+                  setNuevoPartido({
+                    ...nuevoPartido,
+                    equipo2Id: e.target.value,
+                  })
                 }
                 className="w-full p-2 border rounded-md"
                 disabled={!nuevoPartido.equipo1Id}
@@ -284,7 +287,9 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
           {/* Fecha y Cancha */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Fecha y Hora</label>
+              <label className="block text-sm font-medium mb-1">
+                Fecha y Hora
+              </label>
               <input
                 type="datetime-local"
                 required
@@ -295,7 +300,8 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                 className="w-full p-2 border rounded-md"
               />
               <p className="text-xs text-gray-500 mt-1">
-                La hora seleccionada se interpretará como zona horaria Argentina (UTC−3).
+                La hora seleccionada se interpretará como zona horaria Argentina
+                (UTC−3).
               </p>
             </div>
             <div>
@@ -334,18 +340,32 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
         </form>
       )}
 
-      {/* Tabla */}
+      {/* ====== Tabla de Partidos ====== */}
       <div className="bg-white rounded-lg shadow overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Eliminar</th>
-              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-black uppercase">Fecha</th>
-              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-black uppercase">Equipos</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Resultado</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Estado</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">Cancha</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-black uppercase">Acciones</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">
+                Eliminar
+              </th>
+              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-black uppercase">
+                Fecha
+              </th>
+              <th className="sm:px-6 px-18 py-3 text-center text-xs font-medium text-black uppercase">
+                Equipos
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">
+                Resultado
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">
+                Estado
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase">
+                Cancha
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-black uppercase">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -354,17 +374,35 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
               const e2 = getEquipoById(p.equipos?.[1]);
               return (
                 <tr key={p.id}>
+                  {/* Botón Eliminar */}
                   <td className="px-6 py-4 text-center">
-                    <button onClick={() => handleEliminarPartido(p.id)} className="text-red-600 hover:text-red-800">
+                    <button
+                      onClick={() => handleEliminarPartido(p.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
                       <XCircle className="h-5 w-5" />
                     </button>
                   </td>
-                  <td className="px-6 py-4 text-center text-sm text-black">{formatFecha(p.fecha)}</td>
+
+                  {/* Fecha */}
+                  <td className="px-6 py-4 text-center text-sm text-black">
+                    {formatFecha(p.fecha)}
+                  </td>
+
+                  {/* Equipos */}
                   <td className="px-6 py-4 text-center">
-                    <div className="text-sm font-medium text-black">{e1.nombre} vs {e2.nombre}</div>
+                    <div className="text-sm font-medium text-black">
+                      {e1.nombre} vs {e2.nombre}
+                    </div>
                     <div className="text-sm text-black">Grupo {e1.id_grupo}</div>
                   </td>
-                  <td className="px-6 py-4 text-center">{p.resultado ?? "Pendiente"}</td>
+
+                  {/* Resultado */}
+                  <td className="px-6 py-4 text-center">
+                    {p.resultado ?? "Pendiente"}
+                  </td>
+
+                  {/* Estado */}
                   <td className="px-6 py-4 text-center">
                     <span
                       className={`px-2 inline-flex py-1 text-xs leading-5 font-semibold rounded-full ${
@@ -373,16 +411,26 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
                           : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
-                      {p.estado?.toUpperCase() === "JUGADO" ? "Finalizado" : "Programado"}
+                      {p.estado?.toUpperCase() === "JUGADO"
+                        ? "Finalizado"
+                        : "Programado"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-center text-sm text-black">{p.cancha || "Desconocida"}</td>
+
+                  {/* Cancha */}
+                  <td className="px-6 py-4 text-center text-sm text-black">
+                    {p.cancha || "Desconocida"}
+                  </td>
+
+                  {/* Botón Editar/Registrar */}
                   <td className="px-6 py-4 text-right text-sm font-medium">
                     <button
                       onClick={() => onEditarResultado(p)}
                       className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
                     >
-                      {p.estado?.toUpperCase() === "JUGADO" ? "Editar" : "Registrar"}
+                      {p.estado?.toUpperCase() === "JUGADO"
+                        ? "Editar"
+                        : "Registrar"}
                     </button>
                   </td>
                 </tr>
@@ -391,27 +439,6 @@ export default function AdminPartidos({ onEditarResultado, visible = true }) {
           </tbody>
         </table>
       </div>
-
-      {/* Paginación */}
-      {lastPage > 1 && (
-        <div className="flex justify-between items-center bg-white rounded-b-lg shadow p-4 mt-4">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded-md disabled:opacity-50"
-          >
-            Anterior
-          </button>
-          <span className="text-sm text-black">Página {currentPage} de {lastPage}</span>
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, lastPage))}
-            disabled={currentPage === lastPage}
-            className="px-3 py-1 border rounded-md disabled:opacity-50"
-          >
-            Siguiente
-          </button>
-        </div>
-      )}
     </div>
   );
 }

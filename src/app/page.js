@@ -3,6 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Linkedin } from "lucide-react";
+import Bracket from "./components/Bracket";
+import TournamentBracketNoAbsolute from "./components/Bracket2";
+import BracketPlata from "./components/Bracket2";
+import BracketOro from "./components/Bracket";
+import BracketBronce from "./components/Bracket3";
 
 export default function Home() {
   return (
@@ -77,18 +82,15 @@ export default function Home() {
           #SemanaIngenieriaUNSTA
         </div>
       </div>
-
-      {/* <main className="fondo-gradiente-alrevez">
-        <div className="w-full py-10"></div>
-      </main> */}
-
-      {/* otras secciones */}
       <footer className="py-4 flex justify-end items-center bg-black px-8">
         <Link href="https://www.linkedin.com/in/ignacio-albarracin" target="_blank" rel="noopener noreferrer" className="flex items-center text-white hover:text-gray-300">
           <Linkedin size={20} />
           <span className="ml-2 text-sm">Developed by Ignacio Albarracin</span>
         </Link>
       </footer>
+    <BracketOro />
+    <BracketPlata/>
+    <BracketBronce/>
     </div>
 );
 }

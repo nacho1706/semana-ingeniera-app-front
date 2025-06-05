@@ -5,6 +5,7 @@ export const indexPartidos = async (params: {
   cantidad?: number;
   equipos?: Array<number>;
   fecha?: Date;
+  fecha_array?: any[];
   cancha?: number;
 }) => {
   const { data } = await api.get('/partidos/index', { params });

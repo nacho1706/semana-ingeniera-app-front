@@ -40,7 +40,8 @@ export default function GrupoDetalle({ params }) {
         const responsePartidos = await indexPartidos({
           cantidad: 30,
           pagina: 1,
-          fecha_array: ["2025-06-06", "2025-06-07", "2025-06-08"],
+          grupo: Number(id),
+          fecha_array: ["2025-06-05", "2025-06-06", "2025-06-07"],
         });
         const partidosData = responsePartidos.data;
         console.log("partidos:", partidosData);

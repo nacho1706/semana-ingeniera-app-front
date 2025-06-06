@@ -29,7 +29,16 @@ export default function GrupoDetalle({ params }) {
           grupo: id,
           puntero: 1,
         });
-        const equipos = responseEquipos.data;
+        let equipos = responseEquipos.data;
+
+        equipos.sort((a, b) => {
+          if (b.puntos === a.puntos) {
+            return b.GF - a.GF;
+          }
+          return b.puntos - a.puntos;
+        });
+
+        setEquipos(equipos);
         setEquipos(equipos);
         setPartidos(partidos);
       } catch (error) {
@@ -61,7 +70,9 @@ export default function GrupoDetalle({ params }) {
                 <thead>
                   <tr className="bg-gray-100">
                     {/* Esta columna ocupa el 40% del ancho total */}
-                    <th className="w-2/5 pr-24 p-2 text-left align-middle">Equipo</th>
+                    <th className="w-2/5 pr-24 p-2 text-left align-middle">
+                      Equipo
+                    </th>
                     <th className="p-2 text-center align-middle">PTS</th>
                     <th className="p-2 text-center align-middle">PJ</th>
                     <th className="p-2 text-center align-middle">PG</th>
@@ -94,13 +105,27 @@ export default function GrupoDetalle({ params }) {
                       <td className="p-2 text-center font-bold align-middle">
                         {equipo.puntos}
                       </td>
-                      <td className="p-2 text-center align-middle">{equipo.PJ}</td>
-                      <td className="p-2 text-center align-middle">{equipo.PG}</td>
-                      <td className="p-2 text-center align-middle">{equipo.PE}</td>
-                      <td className="p-2 text-center align-middle">{equipo.PP}</td>
-                      <td className="p-2 text-center align-middle">{equipo.GF}</td>
-                      <td className="p-2 text-center align-middle">{equipo.GC}</td>
-                      <td className="p-2 text-center align-middle">{equipo.DG}</td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.PJ}
+                      </td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.PG}
+                      </td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.PE}
+                      </td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.PP}
+                      </td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.GF}
+                      </td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.GC}
+                      </td>
+                      <td className="p-2 text-center align-middle">
+                        {equipo.DG}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -110,8 +135,8 @@ export default function GrupoDetalle({ params }) {
             <div className="text-xs text-gray-500 mb-4 text-center">
               <p>
                 PTS: Puntos, PJ: Partidos jugados, PG: Partidos ganados, PE:
-                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor, DG:
-                Diferencia de goles
+                Partidos empatados, PP: Partidos perdidos, GF: Goles a favor,
+                DG: Diferencia de goles
               </p>
             </div>
           </div>

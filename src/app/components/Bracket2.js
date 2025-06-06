@@ -47,7 +47,7 @@ export default function BracketPlata() {
             <div className="col-start-3 row-start-2 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/MKT UNITED.svg"}
                   alt="Semifinal 1"
                   fill
                   style={{ objectFit: "contain" }}
@@ -111,7 +111,7 @@ export default function BracketPlata() {
             <div className="col-start-3 row-start-4 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/TERAPIA O. FC.svg"}
                   alt="Semifinal 2"
                   fill
                   style={{ objectFit: "contain" }}
@@ -176,7 +176,7 @@ export default function BracketPlata() {
             <div className="col-start-9 row-start-2 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/ANTICANVA FC.svg"}
                   alt="Semifinal 1"
                   fill
                   style={{ objectFit: "contain" }}
@@ -245,7 +245,7 @@ export default function BracketPlata() {
             <div className="col-start-9 row-start-4 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/CEIBO FC.svg"}
                   alt="Semifinal 2"
                   fill
                   style={{ objectFit: "contain" }}

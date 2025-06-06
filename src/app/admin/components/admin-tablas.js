@@ -22,32 +22,32 @@ const AdminTablas = () => {
     fetchData();
   }, []);
 
-  const handleActualizarPuntajes = async () => {
-    try {
-      const res = await actualizarPuntos();
-      console.log("res: ", res.message);
+  // const handleActualizarPuntajes = async () => {
+  //   try {
+  //     const res = await actualizarPuntos();
+  //     console.log("res: ", res.message);
 
-      if (res.message != "Puntos actualizados correctamente") {
-        throw new Error(`HTTP ${res.status}`);
-      }
-      alert("Resultados actualizados con éxito");
-      window.location.reload();
+  //     if (res.message != "Puntos actualizados correctamente") {
+  //       throw new Error(`HTTP ${res.status}`);
+  //     }
+  //     alert("Resultados actualizados con éxito");
+  //     window.location.reload();
 
-    } catch (err) {
-      console.error("Error al actualizar puntajes:", err);
-      alert("Hubo un error al actualizar los puntajes");
-    }
-  };
+  //   } catch (err) {
+  //     console.error("Error al actualizar puntajes:", err);
+  //     alert("Hubo un error al actualizar los puntajes");
+  //   }
+  // };
 
   return (
     <div className="text-black">
       <div className="flex justify-end py-2 px-4">
-        <button
+        {/* <button
           onClick={handleActualizarPuntajes}
           className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded"
         >
           Actualizar puntajes
-        </button>
+        </button> */}
       </div>
       <div className="overflow-x-auto sm:flex sm:justify-center sm:px-10">
         <table className="w-full sm:w-200 mb-4">

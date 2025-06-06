@@ -58,7 +58,7 @@ export default function BracketOro() {
             <div className="col-start-3 row-start-2 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/ADOBE FC.svg"}
                   alt="Semifinal 1"
                   fill
                   style={{ objectFit: "contain" }}
@@ -127,7 +127,7 @@ export default function BracketOro() {
             <div className="col-start-3 row-start-4 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/EDIPO.svg"}
                   alt="Semifinal 2"
                   fill
                   style={{ objectFit: "contain" }}
@@ -192,7 +192,7 @@ export default function BracketOro() {
             <div className="col-start-9 row-start-2 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/WARESOFT.svg"}
                   alt="Semifinal 1"
                   fill
                   style={{ objectFit: "contain" }}
@@ -261,7 +261,7 @@ export default function BracketOro() {
             <div className="col-start-9 row-start-4 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/EVOLUTIONS FC.svg"}
                   alt="Semifinal 2"
                   fill
                   style={{ objectFit: "contain" }}

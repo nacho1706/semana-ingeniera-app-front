@@ -73,7 +73,7 @@ export default function BracketBronce() {
             <div className="col-start-5 row-start-3 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/DEPORTIVO PNG.svg"}
                   alt="FINAL"
                   fill
                   style={{ objectFit: "contain" }}
@@ -269,7 +269,7 @@ export default function BracketBronce() {
             <div className="col-start-7 row-start-3 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-28 sm:h-28 shadow-lg relative">
                 <Image
-                  src={"/teams/default.svg"}
+                  src={"/teams/HIJOS DEL DEBUG.svg"}
                   alt="Equipo D"
                   fill
                   style={{ objectFit: "contain" }}
